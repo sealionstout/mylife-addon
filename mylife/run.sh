@@ -7,6 +7,7 @@ export HA_POLL_SECONDS="$(bashio::config 'ha_poll_seconds')"
 export BL101_POLL_HOURS="$(bashio::config 'bl101_poll_hours')"
 # Emit kids as a compact "Name:Size,Name:Size" string (robust vs. JSON quoting)
 export KIDS_CSV="$(bashio::config 'kids | map(.name + ":" + .size) | join(",")')"
+export HEALTH_INGEST_TOKEN="$(bashio::config 'health_ingest_token')"
 export DB_PATH="/share/mylife.db"
 
 bashio::log.info "Starting myLife backend on :8000 (HA via supervisor proxy)"

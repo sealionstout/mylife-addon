@@ -21,6 +21,34 @@ def _fnum(v):
     try: return float(v)
     except (TypeError, ValueError): return None
 
+def call_service(domain, service, entity_id, extra=None):
+    """Call an HA service (e.g. light.turn_on) via the Supervisor proxy."""
+    data = {"entity_id": entity_id}
+    if extra: data.update(extra)
+    r = requests.post(f"{HA_URL}/api/services/{domain}/{service}",
+                      headers={"Authorization": f"Bearer {TOKEN}",
+                               "Content-Type": "application/json"},
+                      json=data, timeout=15)
+    r.raise_for_status()
+    return {"ok": True, "entity_id": entity_id, "service": f"{domain}.{service}"}
+
+LIGHT_PREFIX = "light."
+
+def set_light(entity_id, on=None, brightness_pct=None):
+    """Turn a light on/off and/or set brightness (0-100). Guarded to light.* only."""
+    if not entity_id.startswith(LIGHT_PREFIX):
+        raise ValueError("only light.* entities may be controlled")
+    if brightness_pct is not None:
+        pct = max(0, min(100, int(brightness_pct)))
+        if pct == 0:
+            return call_service("light", "turn_off", entity_id)
+        return call_service("light", "turn_on", entity_id, {"brightness_pct": pct})
+    if on is True:
+        return call_service("light", "turn_on", entity_id)
+    if on is False:
+        return call_service("light", "turn_off", entity_id)
+    return call_service("light", "toggle", entity_id)
+
 def normalize(states):
     by_id = {s["entity_id"]: s for s in states}
     def attr(eid, k, d=None):
@@ -38,11 +66,24 @@ def normalize(states):
                        "action": a.get("hvac_action")}
             break
 
-    # --- lights (count room groups that are on) ---
+    # --- lights (room/zone groups: full list + on count) ---
     groups = [s for s in states if s["entity_id"].startswith("light.")
               and s["attributes"].get("is_hue_group")]
-    lights_on = [s["attributes"].get("friendly_name") for s in groups if s["state"] == "on"]
-    lights = {"total": len(groups), "on": len(lights_on), "on_names": lights_on}
+    light_list = []
+    for s in groups:
+        a = s["attributes"]
+        br = a.get("brightness")
+        light_list.append({
+            "entity_id": s["entity_id"],
+            "name": a.get("friendly_name"),
+            "on": s["state"] == "on",
+            "brightness": round(br / 255 * 100) if br else None,
+        })
+    # on first, then alphabetical
+    light_list.sort(key=lambda x: (not x["on"], (x["name"] or "").lower()))
+    lights_on = [l["name"] for l in light_list if l["on"]]
+    lights = {"total": len(groups), "on": len(lights_on),
+              "on_names": lights_on, "list": light_list}
 
     # --- security: doors + alarm ---
     doors = [s for s in states if s["entity_id"].startswith("binary_sensor.")

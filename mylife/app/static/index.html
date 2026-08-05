@@ -149,6 +149,17 @@
 
   /* ===== Product / sale cards ===== */
   .prod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .light-list{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+  .lrow{display:flex;align-items:center;gap:9px;padding:6px 9px;border-radius:9px;background:var(--tile2)}
+  .lrow .lname{font-size:11.5px;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .lrow.on .lname{color:#e0a84a}
+  .lrow .lsw{width:34px;height:19px;border-radius:20px;background:rgba(128,128,128,.35);position:relative;cursor:pointer;flex-shrink:0;transition:background .15s}
+  .lrow .lsw::after{content:'';position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;background:#fff;transition:transform .15s}
+  .lrow.on .lsw{background:#e0a84a}
+  .lrow.on .lsw::after{transform:translateX(15px)}
+  .lrow .lbri{width:70px;flex-shrink:0;accent-color:#e0a84a;cursor:pointer}
+  .lrow.off .lbri{opacity:.4}
+  .light-list.busy{opacity:.6;pointer-events:none}
   .prod{border:1px solid var(--card-brd);border-radius:14px;overflow:hidden;background:var(--tile);transition:.2s;cursor:pointer}
   .prod:hover{transform:translateY(-3px);border-color:var(--accent)}
   .prod .img{aspect-ratio:1/1;position:relative;display:grid;place-items:center;color:rgba(255,255,255,.9);overflow:hidden;background:#f4f4f6}
@@ -495,13 +506,13 @@
         <div class="ring">
           <svg width="88" height="88" viewBox="0 0 88 88"><circle cx="44" cy="44" r="38" stroke="rgba(128,128,128,.18)" stroke-width="7" fill="none"/>
           <circle cx="44" cy="44" r="38" stroke="#54e6a3" stroke-width="7" fill="none" stroke-linecap="round" stroke-dasharray="238.76" stroke-dashoffset="42.98"/></svg>
-          <div class="lbl"><b>82%</b><small>Recovery</small></div>
+          <div class="lbl"><b id="w-ring">82%</b><small id="w-ring-lbl">Move</small></div>
         </div>
         <div class="well-stats">
-          <div class="wstat"><div class="k"><svg class="icon"><use href="#i-footprints"/></svg> Steps</div><div class="val">8,240 <small>/ 10k</small></div></div>
-          <div class="wstat"><div class="k"><svg class="icon"><use href="#i-bed"/></svg> Sleep</div><div class="val">7h 12m</div></div>
-          <div class="wstat"><div class="k"><svg class="icon"><use href="#i-heart"/></svg> Resting HR</div><div class="val">58 <small>bpm</small></div></div>
-          <div class="wstat"><div class="k"><svg class="icon"><use href="#i-droplet"/></svg> Hydration</div><div class="val">1.4 <small>/ 2.5 L</small></div></div>
+          <div class="wstat"><div class="k"><svg class="icon"><use href="#i-footprints"/></svg> Steps</div><div class="val" id="w-steps">8,240 <small>/ 10k</small></div></div>
+          <div class="wstat"><div class="k"><svg class="icon"><use href="#i-bed"/></svg> Sleep</div><div class="val" id="w-sleep">7h 12m</div></div>
+          <div class="wstat"><div class="k"><svg class="icon"><use href="#i-heart"/></svg> Resting HR</div><div class="val" id="w-hr">58 <small>bpm</small></div></div>
+          <div class="wstat"><div class="k"><svg class="icon"><use href="#i-footprints"/></svg> Exercise</div><div class="val" id="w-ex">42 <small>/ 30 min</small></div></div>
         </div>
       </div>
       <div class="insight">
@@ -597,7 +608,19 @@
         <div class="iot"><div class="top"><span class="ic"><svg class="icon"><use href="#i-thermometer"/></svg></span><div class="toggle on" data-toggle></div></div>
           <div class="nm">Thermostat · Entryway</div><div class="big-val" id="iot-climate">72°<span style="font-size:12px;color:var(--ink-dim)">F</span></div><div class="st" id="iot-climate-st">Cooling to 77° · idle · 67% humidity</div></div>
         <div class="iot"><div class="top"><span class="ic"><svg class="icon"><use href="#i-lightbulb"/></svg></span><div class="toggle on" data-toggle></div></div>
-          <div class="nm">Hue Lights</div><div class="big-val" id="iot-lights" style="font-size:15px;margin-top:11px">4 of 9 on</div><div class="st" id="iot-lights-st">Living Rm, Family Rm, Peninsula, Brady</div></div>
+          <div class="nm">Hue Lights</div><div class="big-val" id="iot-lights" style="font-size:15px;margin-top:11px">4 of 10 on</div>
+          <div class="light-list" id="iot-lights-list">
+            <div class="lrow on"><span class="lname">Peninsula</span><input type="range" class="lbri" min="0" max="100" value="100" disabled><span class="lsw"></span></div>
+            <div class="lrow on"><span class="lname">Family room</span><input type="range" class="lbri" min="0" max="100" value="19" disabled><span class="lsw"></span></div>
+            <div class="lrow on"><span class="lname">Living room</span><input type="range" class="lbri" min="0" max="100" value="100" disabled><span class="lsw"></span></div>
+            <div class="lrow on"><span class="lname">Brady</span><input type="range" class="lbri" min="0" max="100" value="30" disabled><span class="lsw"></span></div>
+            <div class="lrow off"><span class="lname">Kitchen</span><input type="range" class="lbri" min="0" max="100" value="0" disabled><span class="lsw"></span></div>
+            <div class="lrow off"><span class="lname">Strip</span><input type="range" class="lbri" min="0" max="100" value="0" disabled><span class="lsw"></span></div>
+            <div class="lrow off"><span class="lname">Screen Porch</span><input type="range" class="lbri" min="0" max="100" value="0" disabled><span class="lsw"></span></div>
+            <div class="lrow off"><span class="lname">Patio</span><input type="range" class="lbri" min="0" max="100" value="0" disabled><span class="lsw"></span></div>
+            <div class="lrow off"><span class="lname">Downstairs</span><input type="range" class="lbri" min="0" max="100" value="0" disabled><span class="lsw"></span></div>
+            <div class="lrow off"><span class="lname">Downstairs</span><input type="range" class="lbri" min="0" max="100" value="0" disabled><span class="lsw"></span></div>
+          </div></div>
         <div class="iot"><div class="top"><span class="ic"><svg class="icon"><use href="#i-lock"/></svg></span><div class="toggle" data-toggle></div></div>
           <div class="nm">Security · Alarm</div><div class="big-val" id="iot-security" style="font-size:15px;margin-top:11px;color:var(--danger)">Front door open</div><div class="st" id="iot-security-st">Alarm disarmed · 4 other doors closed</div></div>
         <div class="iot"><div class="top"><span class="ic"><svg class="icon"><use href="#i-home"/></svg></span><div class="toggle on" data-toggle></div></div>
@@ -699,13 +722,48 @@
   const $ = id => document.getElementById(id);
   function ago(sec){ if(sec==null) return ''; if(sec<60) return 'just now'; const m=Math.round(sec/60); if(m<60) return m+'m ago'; return Math.round(m/60)+'h ago'; }
 
+  async function sendLight(eid, body){
+    const box=$('iot-lights-list'); if(box) box.classList.add('busy');
+    try{
+      await fetch('/api/light',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(Object.assign({entity_id:eid},body))});
+      // pull fresh state so the tile reflects HA truth
+      const d=await fetch('/api/dashboard',{cache:'no-store'}).then(r=>r.ok&&r.json());
+      if(d) renderHome((d.panels||{}).home,(d.freshness||{}).home);
+    }catch(e){ console.log('light control failed',e); }
+    finally{ if(box) box.classList.remove('busy'); }
+  }
+  function wireLightControls(box){
+    box.querySelectorAll('.lrow').forEach(row=>{
+      const eid=row.getAttribute('data-eid'); if(!eid) return;
+      const sw=row.querySelector('.lsw'), sl=row.querySelector('.lbri');
+      sw.onclick=()=>{ const turnOn=!row.classList.contains('on');
+        row.classList.toggle('on',turnOn); row.classList.toggle('off',!turnOn);
+        sendLight(eid,{on:turnOn}); };
+      sl.oninput=()=>{ const v=+sl.value; const on=v>0;
+        row.classList.toggle('on',on); row.classList.toggle('off',!on); };
+      sl.onchange=()=>{ sendLight(eid,{brightness:+sl.value}); };
+    });
+  }
   function renderHome(h, fresh){
     if(!h) return;
     const c = h.climate||{};
     if(c.current!=null) $('iot-climate').innerHTML = c.current+'\u00b0<span style="font-size:12px;color:var(--ink-dim)">F</span>';
     if(c.target!=null) $('iot-climate-st').textContent = `${c.mode==='cool'?'Cooling':c.mode==='heat'?'Heating':'Set'} to ${c.target}\u00b0 \u00b7 ${c.action||''} \u00b7 ${c.humidity!=null?c.humidity+'% humidity':''}`;
     const l = h.lights||{};
-    if(l.total!=null){ $('iot-lights').textContent = `${l.on} of ${l.total} on`; $('iot-lights-st').textContent = (l.on_names||[]).slice(0,4).join(', ')||'all off'; }
+    if(l.total!=null){
+      $('iot-lights').textContent = `${l.on} of ${l.total} on`;
+      const box = $('iot-lights-list');
+      if(box && Array.isArray(l.list)){
+        box.innerHTML = l.list.map(x =>
+          `<div class="lrow ${x.on?'on':'off'}" data-eid="${x.entity_id||''}">`+
+            `<span class="lname">${(x.name||'').replace(/</g,'&lt;')}</span>`+
+            `<input type="range" class="lbri" min="0" max="100" value="${x.brightness!=null?x.brightness:(x.on?100:0)}" ${x.entity_id?'':'disabled'}>`+
+            `<span class="lsw"></span></div>`
+        ).join('');
+        wireLightControls(box);
+      }
+    }
     const s = h.security||{};
     if(s.doors_total!=null){
       const open = s.doors_open>0;
@@ -731,6 +789,21 @@
     }
   }
 
+  function renderHealth(hh){
+    if(!hh) return;
+    const set=(id,v)=>{const e=$(id); if(e&&v!=null) e.innerHTML=v;};
+    if(hh.steps!=null) set('w-steps', `${Math.round(hh.steps).toLocaleString()} <small>/ 10k</small>`);
+    if(hh.sleep_hours!=null){ const h=Math.floor(hh.sleep_hours), m=Math.round((hh.sleep_hours-h)*60); set('w-sleep', `${h}h ${m}m`); }
+    if(hh.resting_hr!=null) set('w-hr', `${hh.resting_hr} <small>bpm</small>`);
+    if(hh.exercise_min!=null) set('w-ex', `${Math.round(hh.exercise_min)} <small>/ 30 min</small>`);
+    // ring shows Move (active energy) progress toward a 600 kcal goal
+    if(hh.active_energy!=null){
+      const pct=Math.min(100,Math.round(hh.active_energy/600*100));
+      set('w-ring', pct+'%'); set('w-ring-lbl','Move');
+      const ring=document.querySelector('#wellness .ring circle:last-child');
+      if(ring){ const C=238.76; ring.setAttribute('stroke-dashoffset', (C*(1-pct/100)).toFixed(2)); }
+    }
+  }
   function renderShopping(sh){
     if(!sh||!sh.items||!sh.items.length) return;
     const grid = $('prod-grid'); if(!grid) return;
@@ -755,13 +828,14 @@
       const P = d.panels||{}, F = d.freshness||{};
       renderHome(P.home, F.home);
       renderShopping(P.shopping);
+      renderHealth(P.health);
       console.log('myLife: live data loaded', d.generated_at);
     }catch(e){
       console.log('myLife: backend not reachable, showing demo data');
     }
   })();
   // refresh live data every 60s
-  setInterval(()=>{ fetch('/api/dashboard',{cache:'no-store'}).then(r=>r.ok&&r.json()).then(d=>{ if(d){ renderHome((d.panels||{}).home,(d.freshness||{}).home); renderShopping((d.panels||{}).shopping); } }).catch(()=>{}); }, 60000);
+  setInterval(()=>{ fetch('/api/dashboard',{cache:'no-store'}).then(r=>r.ok&&r.json()).then(d=>{ if(d){ renderHome((d.panels||{}).home,(d.freshness||{}).home); renderShopping((d.panels||{}).shopping); renderHealth((d.panels||{}).health); } }).catch(()=>{}); }, 60000);
 </script>
 </body>
 </html>

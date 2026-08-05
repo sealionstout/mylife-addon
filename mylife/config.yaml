@@ -1,5 +1,5 @@
 name: myLife Dashboard
-version: "0.1.2"
+version: "0.1.5"
 slug: mylife
 description: Personal life dashboard backend — aggregates Home Assistant + BL101 into one live view.
 url: https://github.com/sealionstout/mylife-addon
@@ -28,6 +28,7 @@ options:
       size: YS
   ha_poll_seconds: 180
   bl101_poll_hours: 24
+  health_ingest_token: ""
 schema:
   bl101_domain: str
   kids:
@@ -35,3 +36,4 @@ schema:
       size: str
   ha_poll_seconds: int
   bl101_poll_hours: int
+  health_ingest_token: str?
