@@ -5,7 +5,8 @@ export SUPERVISOR_TOKEN="${SUPERVISOR_TOKEN}"
 export BL101_DOMAIN="$(bashio::config 'bl101_domain')"
 export HA_POLL_SECONDS="$(bashio::config 'ha_poll_seconds')"
 export BL101_POLL_HOURS="$(bashio::config 'bl101_poll_hours')"
-export KIDS_JSON="$(bashio::config 'kids' | jq -c '.')"
+# Emit kids as a compact "Name:Size,Name:Size" string (robust vs. JSON quoting)
+export KIDS_CSV="$(bashio::config 'kids | map(.name + ":" + .size) | join(",")')"
 export DB_PATH="/share/mylife.db"
 
 bashio::log.info "Starting myLife backend on :8000 (HA via supervisor proxy)"

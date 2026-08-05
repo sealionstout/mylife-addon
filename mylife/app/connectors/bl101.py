@@ -3,8 +3,20 @@ tees & shorts in the configured kids' sizes, flags sale vs new."""
 import os, json, requests
 
 DOMAIN = os.environ.get("BL101_DOMAIN", "www.bl101.com")
-KIDS = json.loads(os.environ.get("KIDS_JSON", '[]')) or [
-    {"name": "Brady", "size": "YL"}, {"name": "Beau", "size": "YM"}, {"name": "Logan", "size": "YS"}]
+
+def _parse_kids():
+    csv = os.environ.get("KIDS_CSV", "").strip()
+    kids = []
+    for pair in csv.split(","):
+        pair = pair.strip()
+        if ":" in pair:
+            name, size = pair.split(":", 1)
+            if name.strip() and size.strip():
+                kids.append({"name": name.strip(), "size": size.strip()})
+    return kids or [
+        {"name": "Brady", "size": "YL"}, {"name": "Beau", "size": "YM"}, {"name": "Logan", "size": "YS"}]
+
+KIDS = _parse_kids()
 SIZE_TO_KID = {k["size"].upper(): k["name"] for k in KIDS}
 FALLBACK = {"YL": "L", "YM": "M", "YS": "S"}
 FALLBACK_TO_KID = {FALLBACK[k["size"].upper()]: k["name"] for k in KIDS if k["size"].upper() in FALLBACK}
