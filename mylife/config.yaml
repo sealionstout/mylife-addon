@@ -1,8 +1,8 @@
 name: myLife Dashboard
-version: "0.1.0"
+version: "0.1.1"
 slug: mylife
 description: Personal life dashboard backend — aggregates Home Assistant + BL101 into one live view.
-url: https://github.com/YOURUSERNAME/mylife-addon
+url: https://github.com/sealionstout/mylife-addon
 arch:
   - aarch64
   - amd64

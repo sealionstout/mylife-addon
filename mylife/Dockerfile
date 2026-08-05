@@ -1,4 +1,4 @@
-ARG BUILD_FROM
+ARG BUILD_FROM=ghcr.io/home-assistant/aarch64-base:3.19
 FROM $BUILD_FROM
 
 # Python + build deps (HA base images are Alpine)
