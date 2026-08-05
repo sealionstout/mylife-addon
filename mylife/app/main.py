@@ -1,6 +1,6 @@
 """myLife backend — FastAPI. Serves the aggregated /api/dashboard feed and
 the dashboard HTML. Connectors run on a schedule and write into SQLite."""
-import time, os, logging
+import time, os, logging, threading
 from fastapi import FastAPI, Body
 from fastapi.responses import JSONResponse, FileResponse, HTMLResponse
 from . import store, scheduler
@@ -35,6 +35,26 @@ def ingest_health(payload: dict = Body(...), token: str = ""):
     except Exception as e:
         return JSONResponse({"error": str(e)}, status_code=400)
 
+def _patch_light_state(entity_id, on=None, brightness=None):
+    """Optimistically update the stored home snapshot's light list so the UI
+    doesn't flicker back before HA reports the new state."""
+    snap = store.get("home")
+    if not snap: return
+    home = snap["data"]; lights = home.get("lights", {})
+    lst = lights.get("list", [])
+    changed = False
+    for l in lst:
+        if l.get("entity_id") == entity_id:
+            if brightness is not None:
+                l["brightness"] = int(brightness); l["on"] = int(brightness) > 0
+            elif on is not None:
+                l["on"] = bool(on)
+            changed = True
+    if changed:
+        lights["on"] = sum(1 for l in lst if l.get("on"))
+        lights["on_names"] = [l["name"] for l in lst if l.get("on")]
+        store.put("home", home)
+
 @app.post("/api/light")
 def control_light(payload: dict = Body(...)):
     """Control a light. Body: {entity_id, on?:bool, brightness?:0-100}.
@@ -44,8 +64,15 @@ def control_light(payload: dict = Body(...)):
     brightness = payload.get("brightness")
     try:
         result = ha.set_light(entity_id, on=on, brightness_pct=brightness)
-        # re-pull HA immediately so the next /api/dashboard reflects the change
-        try: scheduler.pull_home()
+        # HA accepted the command -> patch the stored snapshot to the intended
+        # state so the client's immediate re-fetch shows it (no flicker-back).
+        try: _patch_light_state(entity_id, on=on, brightness=brightness)
+        except Exception: pass
+        # Reconcile with HA ground truth in the BACKGROUND after Hue has settled
+        # (~6s). Non-blocking, so it never races the client's read or hangs the
+        # request. The normal 180s poll is the ongoing source of truth.
+        try:
+            threading.Timer(6.0, scheduler.pull_home).start()
         except Exception: pass
         return JSONResponse(result)
     except ValueError as e:

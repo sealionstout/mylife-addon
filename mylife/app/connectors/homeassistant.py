@@ -12,8 +12,9 @@ def _fetch_states():
         import json
         with open(dev_file) as f:
             return json.load(f)
+    # (connect, read) timeouts so a hung socket can never stall the scheduler
     r = requests.get(f"{HA_URL}/api/states",
-                     headers={"Authorization": f"Bearer {TOKEN}"}, timeout=20)
+                     headers={"Authorization": f"Bearer {TOKEN}"}, timeout=(5, 15))
     r.raise_for_status()
     return r.json()
 
@@ -28,7 +29,7 @@ def call_service(domain, service, entity_id, extra=None):
     r = requests.post(f"{HA_URL}/api/services/{domain}/{service}",
                       headers={"Authorization": f"Bearer {TOKEN}",
                                "Content-Type": "application/json"},
-                      json=data, timeout=15)
+                      json=data, timeout=(5, 12))
     r.raise_for_status()
     return {"ok": True, "entity_id": entity_id, "service": f"{domain}.{service}"}
 

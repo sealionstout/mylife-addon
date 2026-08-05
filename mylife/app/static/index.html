@@ -149,6 +149,20 @@
 
   /* ===== Product / sale cards ===== */
   .prod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .fit{display:flex;align-items:center;gap:20px;margin-top:4px}
+  .fit-rings{flex-shrink:0}
+  .fit-rings circle[id]{transition:stroke-dashoffset .6s cubic-bezier(.4,0,.2,1)}
+  .fit-legend{display:flex;flex-direction:column;gap:10px;flex:1}
+  .leg{display:flex;align-items:center;gap:9px;font-size:13px}
+  .leg .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+  .leg .lk{color:var(--ink-dim);width:64px}
+  .leg .lv{font-weight:700;margin-left:auto}
+  .leg .lv small{font-weight:500;color:var(--ink-faint);margin-left:2px}
+  .fit-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:15px}
+  .fstat{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:10px;background:var(--tile2)}
+  .fstat .icon{width:17px;height:17px;color:var(--ink-faint);flex-shrink:0}
+  .fstat b{font-size:15px;font-weight:800;display:block;line-height:1.1}
+  .fstat small{font-size:9.5px;color:var(--ink-faint)}
   .light-list{display:flex;flex-direction:column;gap:6px;margin-top:10px}
   .lrow{display:flex;align-items:center;gap:9px;padding:6px 9px;border-radius:9px;background:var(--tile2)}
   .lrow .lname{font-size:11.5px;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -499,25 +513,37 @@
     <section class="card col-7" id="wellness">
       <div class="card-hd">
         <div class="t"><div class="badge" style="background:rgba(84,230,163,.13);color:var(--good)"><svg class="icon"><use href="#i-leaf"/></svg></div>
-          <div><h2>Health & Wellness</h2><div class="sub">Synced from your ring & records</div></div></div>
+          <div><h2>Health & Wellness</h2><div class="sub">Apple Fitness — <span id="w-fresh">live</span></div></div></div>
         <span class="ai-tag">AI insight</span>
       </div>
-      <div class="rings">
-        <div class="ring">
-          <svg width="88" height="88" viewBox="0 0 88 88"><circle cx="44" cy="44" r="38" stroke="rgba(128,128,128,.18)" stroke-width="7" fill="none"/>
-          <circle cx="44" cy="44" r="38" stroke="#54e6a3" stroke-width="7" fill="none" stroke-linecap="round" stroke-dasharray="238.76" stroke-dashoffset="42.98"/></svg>
-          <div class="lbl"><b id="w-ring">82%</b><small id="w-ring-lbl">Move</small></div>
+      <div class="fit">
+        <div class="fit-rings">
+          <svg width="128" height="128" viewBox="0 0 128 128">
+            <g transform="rotate(-90 64 64)">
+              <circle cx="64" cy="64" r="54" fill="none" stroke="rgba(250,60,90,.18)" stroke-width="11"/>
+              <circle id="ring-move" cx="64" cy="64" r="54" fill="none" stroke="#fa3c5a" stroke-width="11" stroke-linecap="round" stroke-dasharray="339.29" stroke-dashoffset="170"/>
+              <circle cx="64" cy="64" r="41" fill="none" stroke="rgba(84,230,120,.18)" stroke-width="11"/>
+              <circle id="ring-ex" cx="64" cy="64" r="41" fill="none" stroke="#54e678" stroke-width="11" stroke-linecap="round" stroke-dasharray="257.61" stroke-dashoffset="130"/>
+              <circle cx="64" cy="64" r="28" fill="none" stroke="rgba(80,180,255,.18)" stroke-width="11"/>
+              <circle id="ring-stand" cx="64" cy="64" r="28" fill="none" stroke="#50b4ff" stroke-width="11" stroke-linecap="round" stroke-dasharray="175.93" stroke-dashoffset="90"/>
+            </g>
+          </svg>
         </div>
-        <div class="well-stats">
-          <div class="wstat"><div class="k"><svg class="icon"><use href="#i-footprints"/></svg> Steps</div><div class="val" id="w-steps">8,240 <small>/ 10k</small></div></div>
-          <div class="wstat"><div class="k"><svg class="icon"><use href="#i-bed"/></svg> Sleep</div><div class="val" id="w-sleep">7h 12m</div></div>
-          <div class="wstat"><div class="k"><svg class="icon"><use href="#i-heart"/></svg> Resting HR</div><div class="val" id="w-hr">58 <small>bpm</small></div></div>
-          <div class="wstat"><div class="k"><svg class="icon"><use href="#i-footprints"/></svg> Exercise</div><div class="val" id="w-ex">42 <small>/ 30 min</small></div></div>
+        <div class="fit-legend">
+          <div class="leg"><span class="dot" style="background:#fa3c5a"></span><span class="lk">Move</span><span class="lv" id="w-move">— / 600<small>kcal</small></span></div>
+          <div class="leg"><span class="dot" style="background:#54e678"></span><span class="lk">Exercise</span><span class="lv" id="w-ex">— / 30<small>min</small></span></div>
+          <div class="leg"><span class="dot" style="background:#50b4ff"></span><span class="lk">Stand</span><span class="lv" id="w-stand">— / 12<small>hr</small></span></div>
         </div>
+      </div>
+      <div class="fit-stats">
+        <div class="fstat"><svg class="icon"><use href="#i-footprints"/></svg><div><b id="w-steps">—</b><small>steps</small></div></div>
+        <div class="fstat"><svg class="icon"><use href="#i-footprints"/></svg><div><b id="w-dist">—</b><small>miles</small></div></div>
+        <div class="fstat"><svg class="icon"><use href="#i-heart"/></svg><div><b id="w-hr">—</b><small>rest bpm</small></div></div>
+        <div class="fstat"><svg class="icon"><use href="#i-bed"/></svg><div><b id="w-sleep">—</b><small>sleep</small></div></div>
       </div>
       <div class="insight">
         <div class="ic"><svg class="icon"><use href="#i-sparkle"/></svg></div>
-        <p><b>Your recovery is trending up.</b> Sleep improved 22 min/night this week. You're a bit behind on hydration today — I set a gentle 3pm reminder. Your annual physical is due in <b>3 weeks</b>; want me to hold a Thursday-morning slot with Dr. Reyes?</p>
+        <p id="w-insight">Waiting for your first sync from Apple Fitness…</p>
       </div>
     </section>
 
@@ -775,7 +801,19 @@
     $('iot-presence').textContent = p.state==='home'?'Home':'Away';
     $('iot-presence-st').textContent = `${h.cameras||0} cameras \u00b7 ${w.condition||''} ${w.temp!=null?w.temp+'\u00b0':''}`.trim();
     $('home-sub').textContent = `Home Assistant \u00b7 Entryway ${c.current!=null?c.current+'\u00b0':''} \u00b7 ${h.cameras||0} cameras online`;
-    if(fresh&&fresh.age_seconds!=null) $('home-updated').textContent = 'Updated '+ago(fresh.age_seconds);
+    if(fresh&&fresh.age_seconds!=null){
+      const a=fresh.age_seconds;
+      $('home-updated').textContent = 'Updated '+ago(a);
+      const live=$('home-live');
+      if(live){
+        // stale if older than ~8 min (poll is 3 min); flag it instead of pretending live
+        const stale = a>480 || (fresh.error);
+        live.textContent = stale ? 'STALE' : 'LIVE';
+        live.style.background = stale ? '#e0a84a' : '';
+        live.style.color = stale ? '#1a1a1a' : '';
+        live.title = fresh.error ? ('last error: '+fresh.error) : '';
+      }
+    }
     // agent insight from real alerts
     const a = h.alerts||[];
     if(a.length){
@@ -789,20 +827,51 @@
     }
   }
 
-  function renderHealth(hh){
+  const FIT_GOALS = {move:600, exercise:30, stand:12};
+  function renderHealth(hh, fresh){
     if(!hh) return;
     const set=(id,v)=>{const e=$(id); if(e&&v!=null) e.innerHTML=v;};
-    if(hh.steps!=null) set('w-steps', `${Math.round(hh.steps).toLocaleString()} <small>/ 10k</small>`);
+    const ringCirc={'ring-move':339.29,'ring-ex':257.61,'ring-stand':175.93};
+    const setRing=(id,val,goal)=>{
+      const el=$(id); if(!el||val==null) return 0;
+      const pct=Math.min(1, val/goal); const C=ringCirc[id];
+      el.setAttribute('stroke-dashoffset',(C*(1-pct)).toFixed(2));
+      return Math.round(pct*100);
+    };
+    const r=hh.rings||{};
+    const movePct=setRing('ring-move', r.move!=null?r.move:hh.active_energy, FIT_GOALS.move);
+    const exPct  =setRing('ring-ex',   r.exercise!=null?r.exercise:hh.exercise_min, FIT_GOALS.exercise);
+    const stPct  =setRing('ring-stand',r.stand, FIT_GOALS.stand);
+    // legend
+    if(hh.active_energy!=null) set('w-move', `${Math.round(hh.active_energy)} / ${FIT_GOALS.move}<small>kcal</small>`);
+    if(hh.exercise_min!=null)  set('w-ex',   `${Math.round(hh.exercise_min)} / ${FIT_GOALS.exercise}<small>min</small>`);
+    if(hh.stand_hours!=null)   set('w-stand',`${Math.round(hh.stand_hours)} / ${FIT_GOALS.stand}<small>hr</small>`);
+    // stat strip
+    if(hh.steps!=null) set('w-steps', Math.round(hh.steps).toLocaleString());
+    if(hh.distance_mi!=null) set('w-dist', (+hh.distance_mi).toFixed(1));
+    if(hh.resting_hr!=null) set('w-hr', hh.resting_hr);
     if(hh.sleep_hours!=null){ const h=Math.floor(hh.sleep_hours), m=Math.round((hh.sleep_hours-h)*60); set('w-sleep', `${h}h ${m}m`); }
-    if(hh.resting_hr!=null) set('w-hr', `${hh.resting_hr} <small>bpm</small>`);
-    if(hh.exercise_min!=null) set('w-ex', `${Math.round(hh.exercise_min)} <small>/ 30 min</small>`);
-    // ring shows Move (active energy) progress toward a 600 kcal goal
-    if(hh.active_energy!=null){
-      const pct=Math.min(100,Math.round(hh.active_energy/600*100));
-      set('w-ring', pct+'%'); set('w-ring-lbl','Move');
-      const ring=document.querySelector('#wellness .ring circle:last-child');
-      if(ring){ const C=238.76; ring.setAttribute('stroke-dashoffset', (C*(1-pct/100)).toFixed(2)); }
+    // freshness
+    if(fresh&&fresh.age_seconds!=null){
+      const a=fresh.age_seconds; const t=a<90?'live':a<3600?`${Math.round(a/60)}m ago`:`${Math.round(a/3600)}h ago`;
+      set('w-fresh', t);
     }
+    // computed insight from real numbers
+    set('w-insight', healthInsight(hh, {movePct,exPct,stPct}));
+  }
+  function healthInsight(h, p){
+    const closed=[]; if(p.movePct>=100)closed.push('Move'); if(p.exPct>=100)closed.push('Exercise'); if(p.stPct>=100)closed.push('Stand');
+    if(closed.length===3) return `<b>All three rings closed. 🎉</b> ${Math.round(h.active_energy)} kcal, ${Math.round(h.exercise_min)} min exercise, ${Math.round(h.stand_hours)} stand hours — a complete day.`;
+    const behind=[]; 
+    if(p.stPct<100) behind.push(`Stand (${Math.round(h.stand_hours||0)}/${FIT_GOALS.stand}h)`);
+    if(p.exPct<100) behind.push(`Exercise (${Math.round(h.exercise_min||0)}/${FIT_GOALS.exercise}min)`);
+    if(p.movePct<100) behind.push(`Move (${Math.round(h.active_energy||0)}/${FIT_GOALS.move}kcal)`);
+    const near = behind.find(b=>b.startsWith('Exercise')&&p.exPct>=70) || behind.find(b=>b.startsWith('Stand')&&p.stPct>=70);
+    let tip='';
+    if(p.stPct<100 && (h.stand_hours!=null)) tip=` You're ${FIT_GOALS.stand-Math.round(h.stand_hours)} stand hours short — a few short walks closes it.`;
+    else if(p.exPct<100) tip=` A ${FIT_GOALS.exercise-Math.round(h.exercise_min||0)}-min brisk walk closes your Exercise ring.`;
+    const steps = h.steps!=null?`<b>${Math.round(h.steps).toLocaleString()} steps</b> so far`:'Tracking your day';
+    return `${steps}${h.distance_mi?` (${(+h.distance_mi).toFixed(1)} mi)`:''}. ${closed.length?`${closed.join(' & ')} ring${closed.length>1?'s':''} closed. `:''}${tip}`;
   }
   function renderShopping(sh){
     if(!sh||!sh.items||!sh.items.length) return;
@@ -828,14 +897,14 @@
       const P = d.panels||{}, F = d.freshness||{};
       renderHome(P.home, F.home);
       renderShopping(P.shopping);
-      renderHealth(P.health);
+      renderHealth(P.health, F.health);
       console.log('myLife: live data loaded', d.generated_at);
     }catch(e){
       console.log('myLife: backend not reachable, showing demo data');
     }
   })();
   // refresh live data every 60s
-  setInterval(()=>{ fetch('/api/dashboard',{cache:'no-store'}).then(r=>r.ok&&r.json()).then(d=>{ if(d){ renderHome((d.panels||{}).home,(d.freshness||{}).home); renderShopping((d.panels||{}).shopping); renderHealth((d.panels||{}).health); } }).catch(()=>{}); }, 60000);
+  setInterval(()=>{ fetch('/api/dashboard',{cache:'no-store'}).then(r=>r.ok&&r.json()).then(d=>{ if(d){ renderHome((d.panels||{}).home,(d.freshness||{}).home); renderShopping((d.panels||{}).shopping); renderHealth((d.panels||{}).health,(d.freshness||{}).health); } }).catch(()=>{}); }, 60000);
 </script>
 </body>
 </html>
