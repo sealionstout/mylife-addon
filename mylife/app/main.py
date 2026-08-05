@@ -22,6 +22,18 @@ def _startup():
 def health():
     return {"ok": True, "ts": time.time()}
 
+@app.post("/api/refresh")
+def refresh(source: str = "home"):
+    """Force an immediate pull. ?source=home|shopping|all. Returns fresh age."""
+    try:
+        if source in ("home", "all"): scheduler.pull_home()
+        if source in ("shopping", "all"): scheduler.pull_shopping()
+        snap = store.get("home")
+        age = round(time.time() - snap["updated_at"]) if snap else None
+        return JSONResponse({"ok": True, "refreshed": source, "home_age_seconds": age})
+    except Exception as e:
+        return JSONResponse({"error": str(e)}, status_code=502)
+
 @app.post("/api/health/ingest")
 def ingest_health(payload: dict = Body(...), token: str = ""):
     """Receives the iOS Health Auto Export POST. Optional ?token= guard so only
